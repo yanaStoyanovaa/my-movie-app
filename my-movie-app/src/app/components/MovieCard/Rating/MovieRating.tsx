@@ -2,8 +2,8 @@ import StarHalfIcon from "@mui/icons-material/StarHalf";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import { Tooltip, Box, Typography } from "@mui/material";
-import { tooltipBoxStyles, votesTextStyles } from "../MovieCardStyles";
 import { MovieType } from "@/app/typings/movieType";
+import { tooltipBoxStyles } from "../MovieCardStyles";
 
 export interface MovieRating {
   movie: MovieType

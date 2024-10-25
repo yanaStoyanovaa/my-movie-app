@@ -1,7 +1,3 @@
-// components/Search.tsx
-
-"use client";
-
 import React, { useState, useEffect } from "react";
 import {
   TextField,
@@ -10,32 +6,34 @@ import {
   Box,
   CircularProgress,
   Autocomplete,
+  Typography,
 } from "@mui/material";
 import { fetchMovies } from "@/api/fetchMovies";
 import { fetchSuggestions } from "@/api/fetchSuggestions";
 import SearchIcon from "@mui/icons-material/Search";
 import { MovieType } from "../../typings/movieType";
-import Loading from "../Loading/Loading";
 import {
-  containerStyles,
   formBoxStyles,
   textFieldStyles,
   buttonStyles,
   errorBoxStyles,
+  searchHeadingStyles,
 } from "./SearchStyles";
 
-const Search = ({
-  setMovies,
-}: {
+interface SearchProps {
   setMovies: (movies: MovieType[]) => void;
-}) => {
-  const [query, setQuery] = useState("");
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [loadingSuggestions, setLoadingSuggestions] = useState(false);
+  onSearchActivated: () => void;  // Prop to trigger the animation when search is performed
+}
 
-  const handleSearch = async (event: React.FormEvent) => {
+const Search: React.FC<SearchProps> = ({ setMovies, onSearchActivated }) => {
+  const [query, setQuery] = useState<string>("");  // Search query state
+  const [error, setError] = useState<string>("");  // Error message state
+  const [loading, setLoading] = useState<boolean>(false);  // Loading state for movie fetch
+  const [suggestions, setSuggestions] = useState<string[]>([]);  // Suggestions state
+  const [loadingSuggestions, setLoadingSuggestions] = useState<boolean>(false);  // Loading state for suggestions
+
+  // Handle the search form submission
+  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!query.trim()) {
       setError("Please enter a search term");
@@ -46,7 +44,8 @@ const Search = ({
 
     try {
       const movies = await fetchMovies(query);
-      setMovies(movies);
+      setMovies(movies);  // Set the movies in the parent component
+      onSearchActivated();  // Trigger the animation
     } catch (err) {
       setError("Error fetching movies");
     } finally {
@@ -54,6 +53,7 @@ const Search = ({
     }
   };
 
+  // Fetch movie suggestions based on query input
   useEffect(() => {
     const fetch = async () => {
       if (query.length < 3) {
@@ -76,11 +76,12 @@ const Search = ({
     fetch();
   }, [query]);
 
-  if (loading) {
-    return <Loading />;
-  }
   return (
-    <Container sx={containerStyles}>
+    <Container>
+      <Typography sx={searchHeadingStyles} variant="h2">
+        Find Your Favorite Movies
+      </Typography>
+
       <form onSubmit={handleSearch}>
         <Box sx={formBoxStyles}>
           <Autocomplete
@@ -93,7 +94,7 @@ const Search = ({
             renderInput={(params) => (
               <TextField
                 {...params}
-                label="Search for a movie"
+                label="Search for a movie..."
                 variant="outlined"
                 fullWidth
                 InputProps={{
@@ -111,7 +112,6 @@ const Search = ({
               />
             )}
           />
-
           <Button
             type="submit"
             variant="contained"

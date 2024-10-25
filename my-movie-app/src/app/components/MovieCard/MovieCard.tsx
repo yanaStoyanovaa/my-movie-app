@@ -12,15 +12,13 @@ import {
 import InfoIcon from "@mui/icons-material/Info";
 import { useState, useRef, useEffect } from "react";
 import {
-  boxStyles,
   cardStyles,
   cardMediaStyles,
   titleStyles,
-  tooltipBoxStyles,
-  votesTextStyles,
-  overviewBoxStyles,
   overviewTextStyles,
   iconButtonStyles,
+  boxStyles,
+  overviewBoxStyles,
 } from "./MovieCardStyles";
 import { MovieRating } from "./Rating/MovieRating";
 
@@ -38,9 +36,9 @@ const MovieCard = ({ movie }: { movie: any }) => {
   return (
     <Box sx={boxStyles}>
       <Card sx={cardStyles}>
+        {/* Ensure all images have the same fixed height and width */}
         <CardMedia
           component="img"
-          height="400"
           image={
             movie.poster_path
               ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
@@ -50,20 +48,17 @@ const MovieCard = ({ movie }: { movie: any }) => {
           sx={cardMediaStyles}
         />
         <CardContent sx={{ flexGrow: 1 }}>
-          <Typography
-            variant="h6"
-            gutterBottom
-            fontWeight="bold"
-            sx={titleStyles}
-          >
+          {/* Consistent font size and weight for titles */}
+          <Typography variant="h6" gutterBottom sx={titleStyles}>
             {movie.title}
           </Typography>
 
+          {/* Ensure the star rating is properly aligned */}
           <Box>
-            <MovieRating movie={movie}/>
+            <MovieRating movie={movie} />
           </Box>
 
-   
+          {/* Consistent layout and handling of overview text */}
           <Box sx={overviewBoxStyles}>
             <Typography
               ref={textRef}
@@ -74,13 +69,22 @@ const MovieCard = ({ movie }: { movie: any }) => {
               {movie.overview || "No overview available"}
             </Typography>
 
-            {isTextOverflowing && (
-              <Tooltip title={movie.overview} placement="top">
-                <IconButton size="small" sx={iconButtonStyles}>
-                  <InfoIcon />
-                </IconButton>
-              </Tooltip>
-            )}
+            {/* Separate Box to align the Info Button at the bottom */}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "flex-end",
+                marginTop: "auto",
+              }}
+            >
+              {isTextOverflowing && (
+                <Tooltip title={movie.overview} placement="top">
+                  <IconButton size="small" sx={iconButtonStyles}>
+                    <InfoIcon />
+                  </IconButton>
+                </Tooltip>
+              )}
+            </Box>
           </Box>
         </CardContent>
       </Card>
