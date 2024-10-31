@@ -18,11 +18,11 @@ export default function Home() {
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSearchActivated = () => {
+  const handleSearchActivated = ():void => {
     setIsSearchActive(true);
   };
 
-  const handleIsLoading = (value: boolean) => {
+  const handleIsLoading = (value: boolean):void => {
     setIsLoading(value);
   };
 
