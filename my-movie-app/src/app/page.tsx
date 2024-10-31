@@ -1,4 +1,3 @@
-// Home.tsx
 "use client";
 
 import React, { useState } from "react";
@@ -11,16 +10,23 @@ import {
   movedUpSearchStyles,
   resultsContainerStyles,
   searchStyles,
-
 } from "./pageStyle";
+import Loading from "./components/Loading/Loading";
 
 export default function Home() {
   const [movies, setMovies] = useState<MovieType[]>([]);
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleSearchActivated = () => {
     setIsSearchActive(true);
   };
+
+  const handleIsLoading = (value: boolean) => {
+    setIsLoading(value);
+  };
+
+  console.log("pages", movies)
 
   return (
     <Container sx={mainContainerStyles}>
@@ -28,14 +34,17 @@ export default function Home() {
         <Search
           setMovies={setMovies}
           onSearchActivated={handleSearchActivated}
+          setIsLoading={handleIsLoading}
         />
       </Container>
 
-      {movies.length > 0 && (
+      {isLoading && <Loading />}
+      {movies?.length > 0 && (
         <Container sx={resultsContainerStyles}>
           <Results movies={movies} />
         </Container>
       )}
+      {isSearchActive && movies?.length === 0 && <>No movies found</>}
     </Container>
   );
 }

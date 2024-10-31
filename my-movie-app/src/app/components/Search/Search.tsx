@@ -7,6 +7,7 @@ import {
   CircularProgress,
   Autocomplete,
   Typography,
+  Pagination,
 } from "@mui/material";
 import { fetchMovies } from "@/api/fetchMovies";
 import { fetchSuggestions } from "@/api/fetchSuggestions";
@@ -19,51 +20,76 @@ import {
   errorBoxStyles,
   searchHeadingStyles,
 } from "./SearchStyles";
+import Loading from "../Loading/Loading";
 
 interface SearchProps {
   setMovies: (movies: MovieType[]) => void;
-  onSearchActivated: () => void;  // Prop to trigger the animation when search is performed
+  onSearchActivated: () => void;
+  setIsLoading: (value: boolean) => void;
 }
 
-const Search: React.FC<SearchProps> = ({ setMovies, onSearchActivated }) => {
-  const [query, setQuery] = useState<string>("");  // Search query state
-  const [error, setError] = useState<string>("");  // Error message state
-  const [loading, setLoading] = useState<boolean>(false);  // Loading state for movie fetch
-  const [suggestions, setSuggestions] = useState<string[]>([]);  // Suggestions state
-  const [loadingSuggestions, setLoadingSuggestions] = useState<boolean>(false);  // Loading state for suggestions
+const Search: React.FC<SearchProps> = ({
+  setMovies,
+  onSearchActivated,
+  setIsLoading,
+}) => {
+  const [query, setQuery] = useState<string>("");
+  const [debouncedQuery, setDebouncedQuery] = useState<string>("");
+  const [error, setError] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [loadingSuggestions, setLoadingSuggestions] = useState<boolean>(false);
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [totalPages, setTotalPages] = useState<number>(1);
 
-  // Handle the search form submission
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 900);
+
+    return () => {
+      clearTimeout(timer); 
+    };
+  }, [query]);
+
   const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (!query.trim()) {
+    if (!debouncedQuery.trim()) {
       setError("Please enter a search term");
       return;
     }
     setError("");
-    setLoading(true);
+    setIsLoading(true);
 
     try {
-      const movies = await fetchMovies(query);
-      setMovies(movies);  // Set the movies in the parent component
-      onSearchActivated();  // Trigger the animation
+      const data = await fetchMovies(debouncedQuery, currentPage);
+      setMovies(data.results); 
+      onSearchActivated(); 
+      setTotalPages(data.total_pages)
     } catch (err) {
       setError("Error fetching movies");
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
-  // Fetch movie suggestions based on query input
+  useEffect(() => {
+    if (debouncedQuery) {
+      handleSearch(
+        new Event("submit") as unknown as React.FormEvent<HTMLFormElement>
+      );
+    }
+  }, [currentPage]);
+
   useEffect(() => {
     const fetch = async () => {
-      if (query.length < 3) {
+      if (debouncedQuery.length < 3) {
         setSuggestions([]);
         return;
       }
 
       setLoadingSuggestions(true);
       try {
-        const results = await fetchSuggestions(query);
+        const results = await fetchSuggestions(debouncedQuery);
         const suggestionNames = results.map((s: any) => s.name);
         setSuggestions(suggestionNames);
       } catch (error) {
@@ -74,7 +100,14 @@ const Search: React.FC<SearchProps> = ({ setMovies, onSearchActivated }) => {
     };
 
     fetch();
-  }, [query]);
+  }, [debouncedQuery]);
+
+  const handlePageChange = (
+    event: React.ChangeEvent<unknown>,
+    page: number
+  ) => {
+    setCurrentPage(page);
+  };
 
   return (
     <>
@@ -82,7 +115,7 @@ const Search: React.FC<SearchProps> = ({ setMovies, onSearchActivated }) => {
         Find Your Favorite Movies
       </Typography>
 
-      <form  style={{width: "100%"}} onSubmit={handleSearch}>
+      <form style={{ width: "100%" }} onSubmit={handleSearch}>
         <Box sx={formBoxStyles}>
           <Autocomplete
             freeSolo
@@ -125,6 +158,14 @@ const Search: React.FC<SearchProps> = ({ setMovies, onSearchActivated }) => {
       </form>
 
       {error && <Box sx={errorBoxStyles}>{error}</Box>}
+      
+            <Pagination
+        count={totalPages}
+        page={currentPage}
+        onChange={handlePageChange}
+        color="primary"
+        sx={{ marginTop: 2 }}
+      />
     </>
   );
 };

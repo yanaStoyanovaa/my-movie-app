@@ -38,7 +38,7 @@ export const MovieRating = (props: MovieRating) => {
   return (
     <>
       <Tooltip
-        title={`${vote_average.toFixed(1)} / 10 (${
+        title={`${vote_average?.toFixed(1)} / 10 (${
           vote_count
         } votes)`}
         placement="top"

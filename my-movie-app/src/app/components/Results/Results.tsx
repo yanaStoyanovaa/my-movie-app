@@ -2,8 +2,13 @@ import { Box } from "@mui/material";
 import MovieCard from "../MovieCard/MovieCard";
 import { MovieType } from "../../typings/movieType";
 import { resultsBoxStyles } from "./ResultStyles";
+import Loading from "../Loading/Loading";
 
-const Results = ({ movies }: { movies: MovieType[] }) => {
+interface ResultsProps {
+  movies: MovieType[];
+}
+
+const Results = ({ movies}: ResultsProps) => {
   return (
     <Box sx={resultsBoxStyles}>
       {movies.map((movie) => (
