@@ -13,7 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <head />
-      <body>
+      <body style={{height: "100vh"}}>
         <ThemeProvider theme={theme}>
           {/* CssBaseline ensures consistent baseline styling */}
           <CssBaseline />

@@ -77,12 +77,12 @@ const Search: React.FC<SearchProps> = ({ setMovies, onSearchActivated }) => {
   }, [query]);
 
   return (
-    <Container>
+    <>
       <Typography sx={searchHeadingStyles} variant="h2">
         Find Your Favorite Movies
       </Typography>
 
-      <form onSubmit={handleSearch}>
+      <form  style={{width: "100%"}} onSubmit={handleSearch}>
         <Box sx={formBoxStyles}>
           <Autocomplete
             freeSolo
@@ -125,7 +125,7 @@ const Search: React.FC<SearchProps> = ({ setMovies, onSearchActivated }) => {
       </form>
 
       {error && <Box sx={errorBoxStyles}>{error}</Box>}
-    </Container>
+    </>
   );
 };
 

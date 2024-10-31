@@ -1,29 +1,38 @@
+// Home.tsx
 "use client";
 
-import React, { useState } from 'react';
-import { Container } from '@mui/material';
-import Results from './components/Results/Results';
-import Search from './components/Search/Search';
-import { MovieType } from './typings/movieType';
-import { containerStyles, movedUpContainerStyles } from './components/Search/SearchStyles';
+import React, { useState } from "react";
+import { Container } from "@mui/material";
+import Results from "./components/Results/Results";
+import Search from "./components/Search/Search";
+import { MovieType } from "./typings/movieType";
+import {
+  mainContainerStyles,
+  movedUpSearchStyles,
+  resultsContainerStyles,
+  searchStyles,
+
+} from "./pageStyle";
 
 export default function Home() {
   const [movies, setMovies] = useState<MovieType[]>([]);
-  const [isSearchActive, setIsSearchActive] = useState<boolean>(false);  // Track when search is active
+  const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
 
-  // Trigger search animation when movies are fetched
   const handleSearchActivated = () => {
-    setIsSearchActive(true);  // Set search as active to trigger animation
+    setIsSearchActive(true);
   };
 
   return (
-    <Container sx={isSearchActive ? movedUpContainerStyles : containerStyles}>
-      {/* Pass down the trigger handler to Search component */}
-      <Search setMovies={setMovies} onSearchActivated={handleSearchActivated} />
-      
-      {/* Show Results after movies are fetched */}
+    <Container sx={mainContainerStyles}>
+      <Container sx={isSearchActive ? movedUpSearchStyles : searchStyles}>
+        <Search
+          setMovies={setMovies}
+          onSearchActivated={handleSearchActivated}
+        />
+      </Container>
+
       {movies.length > 0 && (
-        <Container sx={{ marginTop: '100px' }}>
+        <Container sx={resultsContainerStyles}>
           <Results movies={movies} />
         </Container>
       )}
