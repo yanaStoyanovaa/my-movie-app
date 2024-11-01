@@ -26,7 +26,7 @@ A simple movie search app that lets users look up movies by title, leveraging Th
 1. Clone the repository:
 
    ```bash
-   git clone <repository_url>
+   git clone git@github.com:yanaStoyanovaa/my-movie-app.git
    cd my-movie-app
 
 2. Install dependencies:
