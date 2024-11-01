@@ -105,7 +105,6 @@ const Search: React.FC<SearchProps> = ({
     }
   };
 
-  console.log("isSearchActive", isSearchActive);
   useEffect(() => {
     const fetch = async () => {
       if (debouncedQuery.length < 3) {

@@ -19,44 +19,55 @@ export default function Home() {
   const [isSearchActive, setIsSearchActive] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const handleSearchActivated = ():void => {
+  const handleSearchActivated = (): void => {
     setIsSearchActive(true);
   };
 
-  const handleIsLoading = (value: boolean):void => {
+  const handleIsLoading = (value: boolean): void => {
     setIsLoading(value);
   };
 
   useEffect(() => {
     if (movies?.length > 0) {
       const delayTimer = setTimeout(() => {
-         setDelayedMovies(movies);
+        setDelayedMovies(movies);
       }, 300); // 0.5 seconds delay
-      
+
       return () => clearTimeout(delayTimer); // Clean up the timer on unmount or if `movies` changes
     } else {
       setDelayedMovies([]);
     }
   }, [movies]);
-  
 
   return (
-    <Container sx={mainContainerStyles}>
-      <Container sx={isSearchActive ? movedUpSearchStyles : searchStyles}>
-        <Search
-          setMovies={setMovies}
-          onSearchActivated={handleSearchActivated}
-          setIsLoading={handleIsLoading}
-          isSearchActive={isSearchActive}
-        />
-      </Container>
+    <>
+      <title>My Movie app</title>
+      <meta
+        name="description"
+        content="Discover movies effortlessly with My-Movie-App. Search for any movie by title, view posters, read overviews, and get suggestions instantly. Fast, responsive, and powered by TMDb API."
+      />
+      <meta
+        name="keywords"
+        content="movie search, movie app, find movies, movie database, film search, TMDb, movie posters, movie details, responsive movie app, instant movie suggestions"
+      />
 
-      {isLoading && <Loading />}
-      {delayedMovies?.length > 0 && (
-        <Container sx={resultsContainerStyles}>
-          <Results movies={movies} />
+      <Container sx={mainContainerStyles}>
+        <Container sx={isSearchActive ? movedUpSearchStyles : searchStyles}>
+          <Search
+            setMovies={setMovies}
+            onSearchActivated={handleSearchActivated}
+            setIsLoading={handleIsLoading}
+            isSearchActive={isSearchActive}
+          />
         </Container>
-      )}
-    </Container>
+
+        {isLoading && <Loading />}
+        {delayedMovies?.length > 0 && (
+          <Container sx={resultsContainerStyles}>
+            <Results movies={movies} />
+          </Container>
+        )}
+      </Container>
+    </>
   );
 }
