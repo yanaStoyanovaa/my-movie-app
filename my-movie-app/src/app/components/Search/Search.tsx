@@ -17,6 +17,7 @@ import {
   buttonStyles,
   errorBoxStyles,
   searchHeadingStyles,
+  paginationBoxStyles,
 } from "./SearchStyles";
 import { MovieResponseType } from "@/app/typings/movieResponseType";
 import { PaginationType } from "@/app/typings/paginationType";
@@ -176,18 +177,13 @@ const Search: React.FC<SearchProps> = ({
       {error && <Box sx={errorBoxStyles}>{error}</Box>}
 
       {paginationProps.resultsLength > 0 ? (
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginTop: "16px",
-          }}
-        >
+        <Box
+          sx={paginationBoxStyles}
+          >
           <Typography
             variant="body1"
             color="textPrimary"
-            style={{ fontWeight: "500", fontSize: "1.1rem" }}
+            style={{ fontWeight: "500", fontSize: "1.1rem"}}
           >
             Showing {paginationProps.resultsLength} of{" "}
             {paginationProps.totalResults} results for "
@@ -201,8 +197,9 @@ const Search: React.FC<SearchProps> = ({
             page={paginationProps.currentPage}
             onChange={handlePageChange}
             color="primary"
+
           />
-        </div>
+        </Box>
       ) : (
         <Typography
           variant="body1"
