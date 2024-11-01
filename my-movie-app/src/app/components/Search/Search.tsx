@@ -21,6 +21,8 @@ import {
   searchHeadingStyles,
 } from "./SearchStyles";
 import Loading from "../Loading/Loading";
+import { MovieResponseType } from "@/app/typings/movieResponseType";
+import { PaginationType } from "@/app/typings/paginationType";
 
 interface SearchProps {
   setMovies: (movies: MovieType[]) => void;
@@ -37,8 +39,12 @@ const Search: React.FC<SearchProps> = ({
   const [debouncedQuery, setDebouncedQuery] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [currentPage, setCurrentPage] = useState<number>(0);
-  const [totalPages, setTotalPages] = useState<number>(1);
+  const [paginationProps, setPaginationProps] = useState<PaginationType>({
+    currentPage: 0,
+    totalPages: 0,
+    totalResults: 0,
+    resultsLength: 0,
+  });
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -64,13 +70,24 @@ const Search: React.FC<SearchProps> = ({
 
     try {
       if (!currentPage) {
-        setCurrentPage(1);
+        setPaginationProps((prevProps) => ({
+          ...prevProps,
+          currentPage: 1,
+        }));
         return;
       }
-      const data = await fetchMovies(debouncedQuery, currentPage);
+      const data: MovieResponseType = await fetchMovies(
+        debouncedQuery,
+        currentPage
+      );
       setMovies(data.results);
       onSearchActivated();
-      setTotalPages(data.total_pages);
+      setPaginationProps((prevProps) => ({
+        ...prevProps,
+        totalPages: data.total_pages,
+        totalResults: data.total_results,
+        resultsLength: data.results?.length ?? 0,
+      }));
     } catch (err) {
       setError("Error fetching movies");
     } finally {
@@ -82,10 +99,10 @@ const Search: React.FC<SearchProps> = ({
     if (debouncedQuery) {
       handleSearch(
         new Event("submit") as unknown as React.FormEvent<HTMLFormElement>,
-        currentPage
+        paginationProps.currentPage
       );
     }
-  }, [currentPage]);
+  }, [paginationProps.currentPage]);
 
   useEffect(() => {
     const fetch = async () => {
@@ -109,7 +126,10 @@ const Search: React.FC<SearchProps> = ({
     event: React.ChangeEvent<unknown>,
     page: number
   ) => {
-    setCurrentPage(page);
+    setPaginationProps((prevProps) => ({
+      ...prevProps,
+      currentPage: page,
+    }));
   };
 
   return (
@@ -150,13 +170,37 @@ const Search: React.FC<SearchProps> = ({
 
       {error && <Box sx={errorBoxStyles}>{error}</Box>}
 
-      <Pagination
-        count={totalPages}
-        page={currentPage}
-        onChange={handlePageChange}
-        color="primary"
-        sx={{ marginTop: 2 }}
-      />
+      {paginationProps.resultsLength > 0 ? (
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            marginTop: "16px"
+          }}
+        >
+          <Typography
+            variant="body1"
+            color="textPrimary"
+            style={{ fontWeight: "500", fontSize: "1.1rem" }}
+          >
+            Showing {paginationProps.resultsLength} of{" "}
+            {paginationProps.totalResults} results for "
+            <span style={{ fontWeight: "bold", fontStyle: "italic" }}>
+              {debouncedQuery}
+            </span>
+            ".
+          </Typography>
+          <Pagination
+            count={paginationProps.totalPages}
+            page={paginationProps.currentPage}
+            onChange={handlePageChange}
+            color="primary"
+           />
+        </div>
+      ) : (
+        <></>
+      )}
     </>
   );
 };

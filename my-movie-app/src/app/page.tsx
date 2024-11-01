@@ -26,7 +26,6 @@ export default function Home() {
     setIsLoading(value);
   };
 
-  console.log("pages", movies)
 
   return (
     <Container sx={mainContainerStyles}>
