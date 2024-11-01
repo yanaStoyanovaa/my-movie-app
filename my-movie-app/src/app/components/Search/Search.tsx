@@ -2,9 +2,7 @@ import React, { useState, useEffect } from "react";
 import {
   TextField,
   Button,
-  Container,
   Box,
-  CircularProgress,
   Autocomplete,
   Typography,
   Pagination,
@@ -20,7 +18,6 @@ import {
   errorBoxStyles,
   searchHeadingStyles,
 } from "./SearchStyles";
-import Loading from "../Loading/Loading";
 import { MovieResponseType } from "@/app/typings/movieResponseType";
 import { PaginationType } from "@/app/typings/paginationType";
 
@@ -28,19 +25,21 @@ interface SearchProps {
   setMovies: (movies: MovieType[]) => void;
   onSearchActivated: () => void;
   setIsLoading: (value: boolean) => void;
+  isSearchActive: boolean;
 }
 
 const Search: React.FC<SearchProps> = ({
   setMovies,
   onSearchActivated,
   setIsLoading,
+  isSearchActive,
 }) => {
   const [query, setQuery] = useState<string>("");
   const [debouncedQuery, setDebouncedQuery] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [paginationProps, setPaginationProps] = useState<PaginationType>({
-    currentPage: 0,
+    currentPage: 1,
     totalPages: 0,
     totalResults: 0,
     resultsLength: 0,
@@ -49,45 +48,53 @@ const Search: React.FC<SearchProps> = ({
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedQuery(query);
-    }, 900);
+    }, 300);
 
     return () => {
       clearTimeout(timer);
     };
   }, [query]);
 
+  const resetSearch = (): void => {
+    setPaginationProps({
+      currentPage: 1,
+      totalPages: 0,
+      totalResults: 0,
+      resultsLength: 0,
+    });
+    setMovies([]);
+  };
+
   const handleSearch = async (
-    event: React.FormEvent<HTMLFormElement>,
-    currentPage?: number
+    event: React.FormEvent<HTMLFormElement> | null,
+    searchQuery: string,
+    currentPage = 1
   ) => {
-    event.preventDefault();
-    if (!debouncedQuery.trim()) {
+    if (event) event.preventDefault();
+    if (!searchQuery.trim()) {
       setError("Please enter a search term");
+      resetSearch();
+
       return;
     }
     setError("");
     setIsLoading(true);
 
     try {
-      if (!currentPage) {
-        setPaginationProps((prevProps) => ({
-          ...prevProps,
-          currentPage: 1,
-        }));
-        return;
-      }
       const data: MovieResponseType = await fetchMovies(
-        debouncedQuery,
+        searchQuery,
         currentPage
       );
+
       setMovies(data.results);
       onSearchActivated();
-      setPaginationProps((prevProps) => ({
-        ...prevProps,
+      setPaginationProps({
+        ...paginationProps,
+        currentPage,
         totalPages: data.total_pages,
         totalResults: data.total_results,
         resultsLength: data.results?.length ?? 0,
-      }));
+      });
     } catch (err) {
       setError("Error fetching movies");
     } finally {
@@ -95,15 +102,7 @@ const Search: React.FC<SearchProps> = ({
     }
   };
 
-  useEffect(() => {
-    if (debouncedQuery) {
-      handleSearch(
-        new Event("submit") as unknown as React.FormEvent<HTMLFormElement>,
-        paginationProps.currentPage
-      );
-    }
-  }, [paginationProps.currentPage]);
-
+  console.log("isSearchActive", isSearchActive);
   useEffect(() => {
     const fetch = async () => {
       if (debouncedQuery.length < 3) {
@@ -126,10 +125,7 @@ const Search: React.FC<SearchProps> = ({
     event: React.ChangeEvent<unknown>,
     page: number
   ) => {
-    setPaginationProps((prevProps) => ({
-      ...prevProps,
-      currentPage: page,
-    }));
+    handleSearch(null, debouncedQuery, page);
   };
 
   return (
@@ -138,14 +134,23 @@ const Search: React.FC<SearchProps> = ({
         Find Your Favorite Movies
       </Typography>
 
-      <form style={{ width: "100%" }} onSubmit={handleSearch}>
+      <form
+        style={{ width: "100%" }}
+        onSubmit={(e) => handleSearch(e, debouncedQuery)}
+      >
         <Box sx={formBoxStyles}>
           <Autocomplete
             freeSolo
             options={suggestions}
             fullWidth
             onInputChange={(e, value) => setQuery(value)}
-            onChange={(e, value) => value && setQuery(value)}
+            onChange={(e, value) => {
+              if (value) {
+                setQuery(value);
+                setDebouncedQuery(value);
+                handleSearch(null, value);
+              }
+            }}
             renderInput={(params) => (
               <TextField
                 {...params}
@@ -176,7 +181,7 @@ const Search: React.FC<SearchProps> = ({
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            marginTop: "16px"
+            marginTop: "16px",
           }}
         >
           <Typography
@@ -196,10 +201,20 @@ const Search: React.FC<SearchProps> = ({
             page={paginationProps.currentPage}
             onChange={handlePageChange}
             color="primary"
-           />
+          />
         </div>
       ) : (
-        <></>
+        <Typography
+          variant="body1"
+          color="textPrimary"
+          style={{ fontWeight: "500", fontSize: "1.1rem", marginTop: "16px" }}
+        >
+          {isSearchActive
+            ? error
+              ? ""
+              : "No movies found. Try different search."
+            : "Results will be showed here."}
+        </Typography>
       )}
     </>
   );

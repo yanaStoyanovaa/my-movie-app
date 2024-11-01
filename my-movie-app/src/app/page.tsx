@@ -34,6 +34,7 @@ export default function Home() {
           setMovies={setMovies}
           onSearchActivated={handleSearchActivated}
           setIsLoading={handleIsLoading}
+          isSearchActive={isSearchActive}
         />
       </Container>
 
@@ -43,7 +44,6 @@ export default function Home() {
           <Results movies={movies} />
         </Container>
       )}
-      {isSearchActive && movies?.length === 0 && <>No movies found</>}
     </Container>
   );
 }
