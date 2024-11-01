@@ -37,8 +37,7 @@ const Search: React.FC<SearchProps> = ({
   const [debouncedQuery, setDebouncedQuery] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [suggestions, setSuggestions] = useState<string[]>([]);
-  const [loadingSuggestions, setLoadingSuggestions] = useState<boolean>(false);
-  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [currentPage, setCurrentPage] = useState<number>(0);
   const [totalPages, setTotalPages] = useState<number>(1);
 
   useEffect(() => {
@@ -47,11 +46,14 @@ const Search: React.FC<SearchProps> = ({
     }, 900);
 
     return () => {
-      clearTimeout(timer); 
+      clearTimeout(timer);
     };
   }, [query]);
 
-  const handleSearch = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = async (
+    event: React.FormEvent<HTMLFormElement>,
+    currentPage?: number
+  ) => {
     event.preventDefault();
     if (!debouncedQuery.trim()) {
       setError("Please enter a search term");
@@ -61,10 +63,14 @@ const Search: React.FC<SearchProps> = ({
     setIsLoading(true);
 
     try {
+      if (!currentPage) {
+        setCurrentPage(1);
+        return;
+      }
       const data = await fetchMovies(debouncedQuery, currentPage);
-      setMovies(data.results); 
-      onSearchActivated(); 
-      setTotalPages(data.total_pages)
+      setMovies(data.results);
+      onSearchActivated();
+      setTotalPages(data.total_pages);
     } catch (err) {
       setError("Error fetching movies");
     } finally {
@@ -75,7 +81,8 @@ const Search: React.FC<SearchProps> = ({
   useEffect(() => {
     if (debouncedQuery) {
       handleSearch(
-        new Event("submit") as unknown as React.FormEvent<HTMLFormElement>
+        new Event("submit") as unknown as React.FormEvent<HTMLFormElement>,
+        currentPage
       );
     }
   }, [currentPage]);
@@ -86,16 +93,12 @@ const Search: React.FC<SearchProps> = ({
         setSuggestions([]);
         return;
       }
-
-      setLoadingSuggestions(true);
       try {
         const results = await fetchSuggestions(debouncedQuery);
         const suggestionNames = results.map((s: any) => s.name);
         setSuggestions(suggestionNames);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
-      } finally {
-        setLoadingSuggestions(false);
       }
     };
 
@@ -120,7 +123,6 @@ const Search: React.FC<SearchProps> = ({
           <Autocomplete
             freeSolo
             options={suggestions}
-            loading={loadingSuggestions}
             fullWidth
             onInputChange={(e, value) => setQuery(value)}
             onChange={(e, value) => value && setQuery(value)}
@@ -130,17 +132,6 @@ const Search: React.FC<SearchProps> = ({
                 label="Search for a movie..."
                 variant="outlined"
                 fullWidth
-                InputProps={{
-                  ...params.InputProps,
-                  endAdornment: (
-                    <>
-                      {loadingSuggestions ? (
-                        <CircularProgress color="inherit" size={20} />
-                      ) : null}
-                      {params.InputProps.endAdornment}
-                    </>
-                  ),
-                }}
                 sx={textFieldStyles}
               />
             )}
@@ -158,8 +149,8 @@ const Search: React.FC<SearchProps> = ({
       </form>
 
       {error && <Box sx={errorBoxStyles}>{error}</Box>}
-      
-            <Pagination
+
+      <Pagination
         count={totalPages}
         page={currentPage}
         onChange={handlePageChange}
