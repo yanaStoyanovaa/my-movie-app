@@ -1,7 +1,7 @@
 import StarHalfIcon from "@mui/icons-material/StarHalf";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
-import { Tooltip, Box, Typography } from "@mui/material";
+import { Tooltip, Box } from "@mui/material";
 import { MovieType } from "@/app/typings/movieType";
 import { tooltipBoxStyles } from "../MovieCardStyles";
 

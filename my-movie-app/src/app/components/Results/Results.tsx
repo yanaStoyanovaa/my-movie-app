@@ -2,7 +2,6 @@ import { Box } from "@mui/material";
 import MovieCard from "../MovieCard/MovieCard";
 import { MovieType } from "../../typings/movieType";
 import { resultsBoxStyles } from "./ResultStyles";
-import Loading from "../Loading/Loading";
 
 interface ResultsProps {
   movies: MovieType[];

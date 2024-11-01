@@ -21,9 +21,10 @@ import {
   overviewBoxStyles,
 } from "./MovieCardStyles";
 import { MovieRating } from "./Rating/MovieRating";
+import { MovieType } from "@/app/typings/movieType";
 
 
-const MovieCard = ({ movie }: { movie: any }) => {
+const MovieCard = ({ movie }: { movie: MovieType }) => {
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
 

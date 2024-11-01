@@ -21,6 +21,7 @@ import {
 } from "./SearchStyles";
 import { MovieResponseType } from "@/app/typings/movieResponseType";
 import { PaginationType } from "@/app/typings/paginationType";
+import { KeywordResponseType } from "@/app/typings/keywordResponseType";
 
 interface SearchProps {
   setMovies: (movies: MovieType[]) => void;
@@ -98,6 +99,7 @@ const Search: React.FC<SearchProps> = ({
       });
     } catch (err) {
       setError("Error fetching movies");
+      console.error("Error fetching movies:", err);
     } finally {
       setIsLoading(false);
     }
@@ -112,7 +114,7 @@ const Search: React.FC<SearchProps> = ({
       }
       try {
         const results = await fetchSuggestions(debouncedQuery);
-        const suggestionNames = results.map((s: any) => s.name);
+        const suggestionNames = results.map((el: KeywordResponseType) => el.name);
         setSuggestions(suggestionNames);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
@@ -186,11 +188,11 @@ const Search: React.FC<SearchProps> = ({
             style={{ fontWeight: "500", fontSize: "1.1rem"}}
           >
             Showing {paginationProps.resultsLength} of{" "}
-            {paginationProps.totalResults} results for "
+            {paginationProps.totalResults} results for &quot;
             <span style={{ fontWeight: "bold", fontStyle: "italic" }}>
               {debouncedQuery}
             </span>
-            ".
+            &quot;.
           </Typography>
           <Pagination
             count={paginationProps.totalPages}
