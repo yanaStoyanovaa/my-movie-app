@@ -1,6 +1,6 @@
 export const searchStyles = {
   padding: "10px",
-  transform: "translateY(200%)",
+  transform: "translateY(150%)",
   transition: "transform 0.5s ease-in-out",
 };
 
@@ -21,7 +21,5 @@ export const searchContainerStyles = {
 
 export const resultsContainerStyles = {
   marginTop: "10px",
-  zIndex: "-100",
-  position: "relative"
 
 };

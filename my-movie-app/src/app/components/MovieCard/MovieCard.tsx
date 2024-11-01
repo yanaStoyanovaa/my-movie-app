@@ -22,9 +22,11 @@ import {
 } from "./MovieCardStyles";
 import { MovieRating } from "./Rating/MovieRating";
 
+
 const MovieCard = ({ movie }: { movie: any }) => {
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     if (textRef.current) {
@@ -42,7 +44,7 @@ const MovieCard = ({ movie }: { movie: any }) => {
           image={
             movie.poster_path
               ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-              : "/no-image.png"
+              : "/fallBackImage.jpg" 
           }
           alt={movie.title}
           sx={cardMediaStyles}
