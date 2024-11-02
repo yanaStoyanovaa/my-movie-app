@@ -12,7 +12,6 @@ A simple movie search app that lets users look up movies by title, leveraging Th
 
 - **Next.js**: Provides server-side rendering, routing, and optimized builds.
 - **TypeScript**: Adds type safety to the codebase, making it easier to scale and maintain.
-- **Tailwind CSS**: Used for responsive and utility-first styling.
 - **Vercel**: Hosts the app with seamless deployment and scaling.
 
 ## Getting Started
