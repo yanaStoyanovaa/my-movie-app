@@ -12,6 +12,7 @@ import {
   searchStyles,
 } from "./pageStyle";
 import Loading from "./components/Loading/Loading";
+import ScrollButton from "./components/ScrollToTopButton/ScrollButton";
 
 export default function Home() {
   const [movies, setMovies] = useState<MovieType[]>([]);
@@ -42,15 +43,6 @@ export default function Home() {
   return (
     <>
       <title>My Movie app</title>
-      <meta
-        name="description"
-        content="Discover movies effortlessly with My-Movie-App. Search for any movie by title, view posters, read overviews, and get suggestions instantly. Fast, responsive, and powered by TMDb API."
-      />
-      <meta
-        name="keywords"
-        content="movie search, movie app, find movies, movie database, film search, TMDb, movie posters, movie details, responsive movie app, instant movie suggestions"
-      />
-
       <Container sx={mainContainerStyles}>
         <Container sx={isSearchActive ? movedUpSearchStyles : searchStyles}>
           <Search
@@ -67,6 +59,7 @@ export default function Home() {
             <Results movies={movies} />
           </Container>
         )}
+        <ScrollButton/>
       </Container>
     </>
   );
