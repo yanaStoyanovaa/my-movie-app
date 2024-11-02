@@ -1,0 +1,7 @@
+{
+    "extends": "./tsconfig.json",
+    "compilerOptions": {
+      "jsx": "react-jsx"  // Override only the `jsx` option for Jest tests
+    }
+  }
+  

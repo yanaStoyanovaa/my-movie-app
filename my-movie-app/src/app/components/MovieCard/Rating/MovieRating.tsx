@@ -4,22 +4,23 @@ import { MovieType } from "@/app/typings/movieType";
 import { tooltipBoxStyles } from "../MovieCardStyles";
 import { getStars } from "./MovieRatingHelper";
 
-export interface MovieRating {
-  movie: MovieType
-}
-
-export const MovieRating = (props: MovieRating): JSX.Element => {
-  const {vote_average, vote_count} = props.movie
+const MovieRating = ({movie}: {movie: MovieType}): JSX.Element => {
+  const {vote_average, vote_count} = movie
+  const averageVote = vote_average ?? 0
+  const voteCount = vote_count ?? 0
 
 
   return (
       <Tooltip
-        title={`${vote_average?.toFixed(1)} / 10 (${
-          vote_count
+        title={`${averageVote?.toFixed(1)} / 10 (${
+          voteCount
         } votes)`}
         placement="top"
+        data-testid='star-tooltip'
       >
-        <Box sx={tooltipBoxStyles}>{getStars(vote_average)}</Box>
+        <Box sx={tooltipBoxStyles}>{getStars(averageVote)}</Box>
       </Tooltip>
   );
 };
+
+export default MovieRating;

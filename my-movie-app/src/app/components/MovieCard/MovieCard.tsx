@@ -14,7 +14,7 @@ import {
   boxStyles,
   overviewBoxStyles,
 } from "./MovieCardStyles";
-import { MovieRating } from "./Rating/MovieRating";
+import  MovieRating  from "./Rating/MovieRating";
 import { MovieType } from "@/app/typings/movieType";
 import MovieInfo from "./MovieInfo/MovieInfo";
 
