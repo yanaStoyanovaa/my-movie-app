@@ -34,7 +34,8 @@ const ScrollButton = (): JSX.Element => {
     <Button
       sx={{ ...ScrollButtonStyles, display: visible ? "inline" : "none" }}
       onClick={scrollToTop}
-    >
+      data-testid='scroll-btn'
+          >
       <NorthIcon />
     </Button>
   );

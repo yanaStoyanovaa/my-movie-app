@@ -7,9 +7,10 @@ interface ResultsProps {
   movies: MovieType[];
 }
 
-const Results = ({ movies}: ResultsProps): JSX.Element => {
+const Results = ({ movies }: ResultsProps): JSX.Element => {
+  if (!movies) return <></>;
   return (
-    <Box sx={resultsBoxStyles}>
+    <Box data-testid='results' sx={resultsBoxStyles}>
       {movies.map((movie) => (
         <MovieCard key={movie.id} movie={movie} />
       ))}

@@ -113,7 +113,9 @@ const Search: React.FC<SearchProps> = ({
       }
       try {
         const results = await fetchSuggestions(debouncedQuery);
-        const suggestionNames = results.map((el: KeywordResponseType) => el.name);
+        const suggestionNames = results.map(
+          (el: KeywordResponseType) => el.name
+        );
         setSuggestions(suggestionNames);
       } catch (error) {
         console.error("Error fetching suggestions:", error);
@@ -126,7 +128,7 @@ const Search: React.FC<SearchProps> = ({
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number
-  ):void => {
+  ): void => {
     handleSearch(null, debouncedQuery, page);
   };
 
@@ -166,6 +168,7 @@ const Search: React.FC<SearchProps> = ({
           <Button
             type="submit"
             variant="contained"
+            data-testid='search-btn'
             color="primary"
             sx={buttonStyles}
             startIcon={<SearchIcon />}
@@ -178,13 +181,11 @@ const Search: React.FC<SearchProps> = ({
       {error && <Box sx={errorBoxStyles}>{error}</Box>}
 
       {paginationProps.resultsLength > 0 ? (
-        <Box
-          sx={paginationBoxStyles}
-          >
+        <Box sx={paginationBoxStyles}>
           <Typography
             variant="body1"
             color="textPrimary"
-            style={{ fontWeight: "500", fontSize: "1.1rem"}}
+            style={{ fontWeight: "500", fontSize: "1.1rem" }}
           >
             Showing {paginationProps.resultsLength} of{" "}
             {paginationProps.totalResults} results for &quot;
@@ -198,11 +199,11 @@ const Search: React.FC<SearchProps> = ({
             page={paginationProps.currentPage}
             onChange={handlePageChange}
             color="primary"
-
           />
         </Box>
       ) : (
         <Typography
+          data-testid="info"
           variant="body1"
           color="textPrimary"
           style={{ fontWeight: "500", fontSize: "1.1rem", marginTop: "16px" }}
