@@ -74,8 +74,3 @@ export const tooltipBoxStyles: SxProps<Theme> = {
   gap: "4px", 
 };
 
-export const iconButtonStyles: SxProps<Theme> = {
-  color: "#555",
-  marginTop: "auto", 
-  alignSelf: "flex-end", 
-};

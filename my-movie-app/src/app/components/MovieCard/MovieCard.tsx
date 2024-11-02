@@ -1,28 +1,24 @@
-
 import {
   Card,
   CardMedia,
   CardContent,
   Typography,
-  Box,
-  Tooltip,
-  IconButton,
+  Box
 } from "@mui/material";
-import InfoIcon from "@mui/icons-material/Info";
 import { useState, useRef, useEffect } from "react";
 import {
   cardStyles,
   cardMediaStyles,
   titleStyles,
   overviewTextStyles,
-  iconButtonStyles,
   boxStyles,
   overviewBoxStyles,
 } from "./MovieCardStyles";
 import { MovieRating } from "./Rating/MovieRating";
 import { MovieType } from "@/app/typings/movieType";
+import MovieInfo from "./MovieInfo/MovieInfo";
 
-const MovieCard = ({ movie }: { movie: MovieType }):JSX.Element => {
+const MovieCard = ({ movie }: { movie: MovieType }): JSX.Element => {
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
 
@@ -70,11 +66,7 @@ const MovieCard = ({ movie }: { movie: MovieType }):JSX.Element => {
               }}
             >
               {isTextOverflowing && (
-                <Tooltip title={movie.overview} placement="top">
-                  <IconButton size="small" sx={iconButtonStyles}>
-                    <InfoIcon />
-                  </IconButton>
-                </Tooltip>
+                <MovieInfo movie={movie}/>
               )}
             </Box>
           </Box>
