@@ -17,26 +17,19 @@ const MovieInfo =  ({ movie }: { movie: MovieType }):JSX.Element => {
   }, []);
   
 
-  const handleTooltipOpen = ():void => {
-    setOpen(true); 
+  const handleTooltip = (state?: boolean): void => {
+    setOpen((prev) => (typeof state === 'boolean' ? state : !prev));
   };
-
-  const handleTooltipClose = ():void => {
-    setOpen(false); 
-  };
-
-  const handleTooltipToggle = ():void => {
-    setOpen((prev) => !prev); 
-  };
+  
 
   return (
-    <ClickAwayListener onClickAway={handleTooltipClose}>
+    <ClickAwayListener onClickAway={() => handleTooltip(false)}>
       <div>
         <Tooltip
           title={movie.overview}
           open={open}
-          onClose={handleTooltipClose}
-          onOpen={handleTooltipOpen}
+          onClose={() => handleTooltip(false)}
+          onOpen={() => handleTooltip(true)}
           placement="top"
           slotProps={{
             tooltip: {
@@ -48,9 +41,9 @@ const MovieInfo =  ({ movie }: { movie: MovieType }):JSX.Element => {
         >
           <IconButton
             size="small"
-            onClick={handleTooltipToggle}
-            onMouseEnter={!isTouchDevice ? handleTooltipOpen : undefined} 
-            onMouseLeave={!isTouchDevice ? handleTooltipClose : undefined} 
+            onClick={() => handleTooltip()}
+            onMouseEnter={!isTouchDevice ? () => handleTooltip(open) : undefined} 
+            onMouseLeave={!isTouchDevice ? () => handleTooltip(false) : undefined} 
             sx={iconButtonStyles}
           >
             <InfoIcon />
