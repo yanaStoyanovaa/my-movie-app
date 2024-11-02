@@ -71,7 +71,7 @@ const Search: React.FC<SearchProps> = ({
     event: React.FormEvent<HTMLFormElement> | null,
     searchQuery: string,
     currentPage = 1
-  ) => {
+  ): Promise<void> => {
     if (event) event.preventDefault();
     if (!searchQuery.trim()) {
       setError("Please enter a search term");
@@ -126,7 +126,7 @@ const Search: React.FC<SearchProps> = ({
   const handlePageChange = (
     event: React.ChangeEvent<unknown>,
     page: number
-  ) => {
+  ):void => {
     handleSearch(null, debouncedQuery, page);
   };
 
@@ -211,7 +211,7 @@ const Search: React.FC<SearchProps> = ({
             ? error
               ? ""
               : "No movies found. Try different search."
-            : "Results will be showed here."}
+            : "Results will be shown here."}
         </Typography>
       )}
     </>

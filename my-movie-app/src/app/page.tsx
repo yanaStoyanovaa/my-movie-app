@@ -31,9 +31,9 @@ export default function Home() {
     if (movies?.length > 0) {
       const delayTimer = setTimeout(() => {
         setDelayedMovies(movies);
-      }, 300); // 0.5 seconds delay
+      }, 300); 
 
-      return () => clearTimeout(delayTimer); // Clean up the timer on unmount or if `movies` changes
+      return () => clearTimeout(delayTimer);
     } else {
       setDelayedMovies([]);
     }

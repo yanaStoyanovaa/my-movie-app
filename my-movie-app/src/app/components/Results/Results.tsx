@@ -7,7 +7,7 @@ interface ResultsProps {
   movies: MovieType[];
 }
 
-const Results = ({ movies}: ResultsProps) => {
+const Results = ({ movies}: ResultsProps): JSX.Element => {
   return (
     <Box sx={resultsBoxStyles}>
       {movies.map((movie) => (

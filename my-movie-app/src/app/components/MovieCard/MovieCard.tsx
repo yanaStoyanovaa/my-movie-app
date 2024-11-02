@@ -1,4 +1,3 @@
-// components/Results.tsx
 
 import {
   Card,
@@ -23,11 +22,9 @@ import {
 import { MovieRating } from "./Rating/MovieRating";
 import { MovieType } from "@/app/typings/movieType";
 
-
-const MovieCard = ({ movie }: { movie: MovieType }) => {
+const MovieCard = ({ movie }: { movie: MovieType }):JSX.Element => {
   const [isTextOverflowing, setIsTextOverflowing] = useState(false);
   const textRef = useRef<HTMLDivElement>(null);
-
 
   useEffect(() => {
     if (textRef.current) {
@@ -39,29 +36,23 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
   return (
     <Box sx={boxStyles}>
       <Card sx={cardStyles}>
-        {/* Ensure all images have the same fixed height and width */}
         <CardMedia
           component="img"
           image={
             movie.poster_path
               ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
-              : "/fallBackImage.jpg" 
+              : "/fallBackImage.jpg"
           }
           alt={movie.title}
           sx={cardMediaStyles}
         />
         <CardContent sx={{ flexGrow: 1 }}>
-          {/* Consistent font size and weight for titles */}
           <Typography variant="h6" gutterBottom sx={titleStyles}>
             {movie.title}
           </Typography>
-
-          {/* Ensure the star rating is properly aligned */}
           <Box>
             <MovieRating movie={movie} />
           </Box>
-
-          {/* Consistent layout and handling of overview text */}
           <Box sx={overviewBoxStyles}>
             <Typography
               ref={textRef}
@@ -71,8 +62,6 @@ const MovieCard = ({ movie }: { movie: MovieType }) => {
             >
               {movie.overview || "No overview available"}
             </Typography>
-
-            {/* Separate Box to align the Info Button at the bottom */}
             <Box
               sx={{
                 display: "flex",

@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import theme from '../theme/theme'; // Assuming your custom theme is in src/theme
+import theme from '../theme/theme'; 
 
 export default function RootLayout({
   children,
@@ -15,7 +15,6 @@ export default function RootLayout({
       <head />
       <body style={{height: "100vh"}}>
         <ThemeProvider theme={theme}>
-          {/* CssBaseline ensures consistent baseline styling */}
           <CssBaseline />
           {children}
         </ThemeProvider>
