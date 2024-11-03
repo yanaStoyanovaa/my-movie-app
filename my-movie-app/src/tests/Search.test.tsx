@@ -25,7 +25,6 @@ describe("Search Component", () => {
 
 
   test("displays suggestions when typing", async () => {
-    // Mocking the fetchSuggestions API call
     (fetchSuggestions as jest.Mock).mockResolvedValue([
       { name: "Inception" },
       { name: "Incredible" },
